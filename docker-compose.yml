@@ -1,0 +1,75 @@
+services:
+  mongo-trips:
+    image: mongo:latest
+    ports:
+      - 27019:27017
+    volumes:
+      - mongodb_trip_data:/data/db
+
+  mysql-booking:
+    image: mysql:latest
+    ports:
+      - 3308:3306
+    volumes:
+      - mysql_booking_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: abc123
+
+  mysql-traveler:
+    image: mysql:latest
+    ports:
+      - 3309:3306
+    volumes:
+      - mysql_traveler_data:/var/lib/mysql
+    environment:
+      MYSQL_ROOT_PASSWORD: abc123
+
+  trip-service:
+    depends_on:
+      - mongo-trips
+    image: mdaniels/trip-service
+    ports:
+      - 8085:8085
+    links:
+      - mongo-trips
+    environment:
+      MONGODB_PORT: 27019
+      MONGODB_HOST: mongo-trips
+
+  traveler-service:
+    depends_on:
+      - mysql-traveler
+    image: mdaniels/traveler-service
+    ports:
+      - 8086:8086
+    links:
+      - mysql-traveler
+    environment:
+      MYSQL_DB_USERNAME: root
+      MYSQL_DB_PASSWORD: abc123
+      MYSQL_DB_HOST: mysql-traveler
+      MYSQL_DB_PORT: 3307
+
+  booking-service:
+    depends_on:
+      - trip-service
+      - traveler-service
+    image: mdaniels/booking-service
+    ports:
+      - 8084:8084
+    links:
+      - trip-service
+      - traveler-service
+    environment:
+      TRIP_SERVICE_BASEURL: trip-service:8085
+      TRAVELER_INFO_SERVICE_BASEURL: traveler-service:8086
+      MYSQL_DB_USERNAME: root
+      MYSQL_DB_PASSWORD: abc123
+      MYSQL_DB_HOST: mysql-booking
+      MYSQL_DB_PORT: 3306
+
+
+volumes:
+  mongodb_trip_data:
+  mysql_traveler_data:
+  mysql_booking_data:
