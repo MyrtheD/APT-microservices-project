@@ -68,6 +68,19 @@ services:
       MYSQL_DB_HOST: mysql-booking
       MYSQL_DB_PORT: 3306
 
+  api-gateway:
+    depends_on:
+      - trip-service
+      - booking-service
+    image: mdaniels/api-gateway
+    ports:
+      - 8087:8087
+    links:
+      - trip-service
+      - booking-service
+    environment:
+      TRIP_SERVICE_BASEURL: trip-service:8085
+      BOOKING_SERVICE_BASEURL: booking-service:8084
 
 volumes:
   mongodb_trip_data:
