@@ -27,7 +27,7 @@ services:
   trip-service:
     depends_on:
       - mongo-trips
-    image: mdaniels/trip-service
+    image: danmyr/trip-service
     ports:
       - 8085:8085
     links:
@@ -39,7 +39,7 @@ services:
   traveler-service:
     depends_on:
       - mysql-traveler
-    image: mdaniels/traveler-service
+    image: danmyr/traveler-service
     ports:
       - 8086:8086
     links:
@@ -54,7 +54,7 @@ services:
     depends_on:
       - trip-service
       - traveler-service
-    image: mdaniels/booking-service
+    image: danmyr/booking-service
     ports:
       - 8084:8084
     links:
@@ -72,7 +72,7 @@ services:
     depends_on:
       - trip-service
       - booking-service
-    image: mdaniels/api-gateway
+    image: danmyr/api-gateway
     ports:
       - 8087:8087
     links:

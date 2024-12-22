@@ -20,7 +20,7 @@ public class TripService {
     @PostConstruct
     public void loadData() {
         if(tripRepository.count() <= 0){
-            Trip trip = Trip.builder()
+            Trip trip1 = Trip.builder()
                     .numberOfDays(6)
                     .destination("Spain")
                     .hotel("Beach Hotel")
@@ -31,7 +31,7 @@ public class TripService {
                     .returnDate(DateFormat.getTimeInstance(16- 7 -2025))
                     .build();
 
-            Trip trip1 = Trip.builder()
+            Trip trip2 = Trip.builder()
                     .numberOfDays(10)
                     .destination("Hungary")
                     .hotel("Green Bean Hotel")
@@ -42,25 +42,65 @@ public class TripService {
                     .returnDate(DateFormat.getTimeInstance(20-8-2025))
                     .build();
 
-            tripRepository.save(trip);
-            tripRepository.save(trip1);
+            Trip trip3 = Trip.builder()
+                    .numberOfDays(7)
+                    .destination("Italy")
+                    .hotel("Villa Paradise")
+                    .numberOfPlaces(30)
+                    .numberOfPlacesAvailable(30)
+                    .price(BigDecimal.valueOf(399.99))
+                    .departureDate(DateFormat.getTimeInstance(15-6-2025))
+                    .returnDate(DateFormat.getTimeInstance(22-6-2025))
+                    .build();
+
+            Trip trip4 = Trip.builder()
+                    .numberOfDays(5)
+                    .destination("France")
+                    .hotel("Luxe Paris Hotel")
+                    .numberOfPlaces(40)
+                    .numberOfPlacesAvailable(40)
+                    .price(BigDecimal.valueOf(299.99))
+                    .departureDate(DateFormat.getTimeInstance(20-5-2025))
+                    .returnDate(DateFormat.getTimeInstance(25-5-2025))
+                    .build();
+
+            Trip trip5 = Trip.builder()
+                    .numberOfDays(8)
+                    .destination("Germany")
+                    .hotel("Berlin Comfort Inn")
+                    .numberOfPlaces(35)
+                    .numberOfPlacesAvailable(35)
+                    .price(BigDecimal.valueOf(359.99))
+                    .departureDate(DateFormat.getTimeInstance(1-9-2025))
+                    .returnDate(DateFormat.getTimeInstance(9-9-2025))
+                    .build();
+
+            Trip trip6 = Trip.builder()
+                    .numberOfDays(12)
+                    .destination("Greece")
+                    .hotel("Santorini Dream")
+                    .numberOfPlaces(20)
+                    .numberOfPlacesAvailable(20)
+                    .price(BigDecimal.valueOf(499.99))
+                    .departureDate(DateFormat.getTimeInstance(25-7-2025))
+                    .returnDate(DateFormat.getTimeInstance(6-8-2025))
+                    .build();
+
+            Trip trip7 = Trip.builder()
+                    .numberOfDays(14)
+                    .destination("Australia")
+                    .hotel("Sydney Opera Hotel")
+                    .numberOfPlaces(10)
+                    .numberOfPlacesAvailable(10)
+                    .price(BigDecimal.valueOf(1599.99))
+                    .departureDate(DateFormat.getTimeInstance(1-12-2025))
+                    .returnDate(DateFormat.getTimeInstance(15-12-2025))
+                    .build();
+
+            tripRepository.saveAll(List.of(trip1, trip2, trip3, trip4, trip5, trip6, trip7));
         }
     }
 
-    public void createTrip(TripRequest tripRequest){
-        Trip trip = Trip.builder()
-                .numberOfDays(tripRequest.getNumberOfDays())
-                .destination(tripRequest.getDestination())
-                .hotel(tripRequest.getHotel())
-                .numberOfPlaces(tripRequest.getNumberOfPlaces())
-                .numberOfPlacesAvailable(tripRequest.getNumberOfPlacesAvailable())
-                .price(tripRequest.getPrice())
-                .departureDate(tripRequest.getDepartureDate())
-                .returnDate(tripRequest.getReturnDate())
-                .build();
-
-        tripRepository.save(trip);
-    }
 
     public List<TripResponse> getAllTrips() {
         List<Trip> trips = tripRepository.findAll();
@@ -72,6 +112,26 @@ public class TripService {
         List<Trip> trips = tripRepository.findByIdIn(id);
 
         return trips.stream().map(this::mapToTripResponse).toList();
+    }
+
+    public TripResponse updateTrip(String id, TripRequest tripRequest) {
+        Trip trip = tripRepository.findById(id)
+                .orElseThrow(() -> new IllegalArgumentException("Trip with ID " + id + " not found"));
+
+        // Update the trip fields
+        trip.setNumberOfDays(tripRequest.getNumberOfDays());
+        trip.setDestination(tripRequest.getDestination());
+        trip.setHotel(tripRequest.getHotel());
+        trip.setNumberOfPlaces(tripRequest.getNumberOfPlaces());
+        trip.setNumberOfPlacesAvailable(tripRequest.getNumberOfPlacesAvailable());
+        trip.setPrice(tripRequest.getPrice());
+        trip.setDepartureDate(tripRequest.getDepartureDate());
+        trip.setReturnDate(tripRequest.getReturnDate());
+
+        // Save the updated trip
+        Trip updatedTrip = tripRepository.save(trip);
+
+        return mapToTripResponse(updatedTrip);
     }
 
     private TripResponse mapToTripResponse(Trip trip) {

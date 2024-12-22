@@ -15,12 +15,6 @@ import java.util.List;
 public class TripController {
 
     private final TripService tripService;
-    @PostMapping
-    @ResponseStatus(HttpStatus.OK)
-    public void createTrip
-            (@RequestBody TripRequest tripRequest) {
-        tripService.createTrip(tripRequest);
-    }
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
@@ -35,4 +29,9 @@ public class TripController {
         return tripService.getAllTrips();
     }
 
+    @PutMapping("/{id}")
+    @ResponseStatus(HttpStatus.OK)
+    public TripResponse updateTrip(@PathVariable String id, @RequestBody TripRequest tripRequest) {
+        return tripService.updateTrip(id, tripRequest);
+    }
 }
