@@ -12,6 +12,8 @@ Dit project in een service waarmee, vakantiereizen kunnen worden geboekt.
 ## Endpoints
 - **BookingService** (Poort 8084)
   - `GET /api/bookings`
+    ![image](https://github.com/user-attachments/assets/55db752d-e636-4bbc-9adc-0ce2677abd54)
+
   - `POST /api/booking`
   - `DELETE /api/booking`
 - **TravelService** (Poort 8085)
