@@ -6,6 +6,7 @@
   <component name="ChangeListManager">
     <list default="true" id="2382391e-22b4-44ad-af05-cff3e13e757c" name="Changes" comment="">
       <change beforePath="$PROJECT_DIR$/.github/workflows/main.yml" beforeDir="false" afterPath="$PROJECT_DIR$/.github/workflows/main.yml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -77,7 +78,7 @@
       </set>
     </option>
   </component>
-  <component name="RunManager" selected="Spring Boot.ApiGatewayApplication">
+  <component name="RunManager">
     <configuration name="ApiGatewayApplication" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
       <module name="api-gateway" />
       <option name="SPRING_BOOT_MAIN_CLASS" value="fact.it.apigateway.ApiGatewayApplication" />
@@ -131,7 +132,7 @@
       <workItem from="1734453810076" duration="869000" />
       <workItem from="1734548019736" duration="12702000" />
       <workItem from="1734775774597" duration="10528000" />
-      <workItem from="1734891494310" duration="6284000" />
+      <workItem from="1734891494310" duration="7525000" />
     </task>
     <servers />
   </component>
