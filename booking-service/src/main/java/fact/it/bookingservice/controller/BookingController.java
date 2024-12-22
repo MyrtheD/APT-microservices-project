@@ -27,4 +27,13 @@ public class BookingController {
     public List<BookingResponse> getAllBookings() {
         return bookingService.getAllBookings();
     }
+
+
+    // New Delete Mapping for Booking
+    @DeleteMapping("/booking/{bookingNumber}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)  // 204 No Content response
+    public String deleteBooking(@PathVariable String bookingNumber) {
+        boolean result = bookingService.deleteBooking(bookingNumber);
+        return (result ? "Booking deleted successfully" : "Booking deletion failed");
+    }
 }

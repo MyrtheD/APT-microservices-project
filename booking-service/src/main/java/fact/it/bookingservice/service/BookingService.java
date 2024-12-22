@@ -7,13 +7,14 @@ import fact.it.bookingservice.dto.TripResponse;
 import fact.it.bookingservice.model.Booking;
 import fact.it.bookingservice.model.SingleBooking;
 import fact.it.bookingservice.repository.BookingRepository;
+import jakarta.annotation.PostConstruct;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
 
-import java.util.Arrays;
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.UUID;
 import java.util.stream.Collectors;
@@ -31,6 +32,43 @@ public class BookingService {
     @Value("${travelerservice.baseurl}")
     private String travelerServiceBaseUrl;
 
+    public boolean deleteBooking(String bookingNumber) {
+        // Fetch the booking by bookingNumber
+        Booking booking = bookingRepository.findByBookingNumber(bookingNumber)
+                .orElseThrow(() -> new IllegalArgumentException("Booking not found for booking number: " + bookingNumber));
+
+        // Iterate over the single bookings to update trip availability
+        for (SingleBooking singleBooking : booking.getSingleBookingsList()) {
+            // Fetch the trip details
+            TripResponse tripResponse = webClient.get()
+                    .uri("http://" + tripServiceBaseUrl + "/api/trip", uriBuilder -> uriBuilder.queryParam("id", singleBooking.getTripId()).build())
+                    .retrieve()
+                    .bodyToMono(TripResponse.class)
+                    .block();
+
+            if (tripResponse == null) {
+                throw new IllegalArgumentException("Trip not found for trip ID: " + singleBooking.getTripId());
+            }
+
+            // Adjust the number of available seats by adding back the people who were previously booked
+            tripResponse.setNumberOfPlacesAvailable(
+                    tripResponse.getNumberOfPlacesAvailable() + singleBooking.getNumberOfPeople()
+            );
+
+            // Update trip availability in the Trip Service
+            webClient.put()
+                    .uri("http://" + tripServiceBaseUrl + "/api/trip")
+                    .bodyValue(tripResponse)
+                    .retrieve()
+                    .toBodilessEntity()
+                    .block();
+        }
+
+        // Delete the booking from the repository
+        bookingRepository.delete(booking);
+
+        return true;
+    }
 
     public boolean registerBooking(BookingRequest bookingRequest) {
         Booking booking = new Booking();
@@ -75,7 +113,6 @@ public class BookingService {
 
         return true;
     }
-
 
     public List<BookingResponse> getAllBookings() {
         List<Booking> bookings = bookingRepository.findAll();
