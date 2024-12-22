@@ -4,7 +4,7 @@ Dit project in een service waarmee, vakantiereizen kunnen worden geboekt.
 
 ## Microservices
 - **BookingService**: Beheert boekingsoperaties.
-- **TravelService**: Beheert reizen.
+- **TripService**: Beheert reizen.
 - **TravelerService**: Beheert reizigersprofielen.
 ## API Gateway
 ## Schema
@@ -16,7 +16,7 @@ Dit project in een service waarmee, vakantiereizen kunnen worden geboekt.
 
   - `POST /api/booking`
   - `DELETE /api/booking`
-- **TravelService** (Poort 8085)
+- **TripService** (Poort 8085)
   - `GET /api/trips`
   - `PUT /api/trip/{id}`
 - **TravelerService** (Poort 8086)
